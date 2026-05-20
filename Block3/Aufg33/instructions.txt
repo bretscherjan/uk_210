@@ -1,0 +1,66 @@
+Bearbeiten Sie die folgenden Schritte aufbauend, um die Funktionalität von Containern und den Umgang mit persistenten Daten zu verstehen:
+
+Python-Webserver erstellen:
+Erstellen Sie eine einfache Python-Anwendung (app.py) mit Flask, die einen Namen aus der URL liest und Hello, <name>! zurückgibt. Die Erstellung kann selbstständig oder mit KI-Unterstützung erfolgen.
+Beispiel:
+
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    name = request.args.get('name', 'World')
+    return f'Hello, {name}!'
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
+    
+Dockerfile erstellen und Container starten:
+Erstellen Sie ein Dockerfile, das Flask installiert, das Image baut und den Webserver startet.
+
+FROM python:latest
+WORKDIR /app
+COPY app.py /app/
+RUN pip install flask
+EXPOSE 8080
+CMD ["python", "app.py"]
+    
+Bauen und starten Sie den Container:
+
+docker build -t python-server .
+docker run -p 8080:8080 python-server
+    
+Testen Sie die Anwendung unter: http://localhost:8080?name=Docker
+Sicherheitscheck durchführen:
+Überprüfen Sie Ihr Image mit Docker Scout auf bekannte Sicherheitslücken (CVEs):
+
+docker scout cves python-server
+    
+Verwenden Sie ein kleineres Basis-Image (z. B. python:alpine), bauen Sie das Image neu und scannen Sie erneut.
+Datei lesen im Container:
+Erstellen Sie ein Python-Skript (script.py), das den Inhalt einer Datei data.txt ausgibt. Erstellen Sie dazu ein Dockerfile:
+
+FROM python:latest
+WORKDIR /data
+COPY data.txt /data/
+COPY script.py /data/
+CMD ["python", "script.py"]
+    
+Bauen und starten Sie den Container:
+
+docker build -t file-reader .
+docker run file-reader
+    
+Datei ändern und neu bauen:
+Ändern Sie den Inhalt von data.txt, bauen Sie das Image neu und starten Sie den Container. Beobachten Sie die Ausgabe.
+
+Datei ändern ohne Rebuild:
+Ändern Sie data.txt erneut, ohne das Image neu zu bauen, und starten Sie den Container. Beobachten Sie, dass weiterhin der alte Inhalt ausgegeben wird. Notieren Sie die Ursache.
+
+Verwendung eines Volumes:
+Starten Sie den Container mit einem gemounteten Volume, sodass Änderungen an data.txt sofort wirksam werden:
+
+docker run -v $(pwd)/data.txt:/data/data.txt file-reader
+    
+Testen Sie erneut, dass Änderungen an data.txt sofort ausgegeben werden.
