@@ -1,5 +1,5 @@
-FROM nginx:alpine
+FROM nginxinc:nginx-unprivileged
 
 COPY hello-world.html /usr/share/nginx/html/hello-world.html
 
-EXPOSE 80
+EXPOSE 8080
