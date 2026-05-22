@@ -1,5 +1,3 @@
-FROM nginxinc/nginx-unprivileged
-
-COPY hello-world.html /usr/share/nginx/html/hello-world.html
-
-EXPOSE 80
+FROM nginxinc/nginx-unprivileged:latest
+COPY hello-world.html /usr/share/nginx/index/
+EXPOSE 8080
